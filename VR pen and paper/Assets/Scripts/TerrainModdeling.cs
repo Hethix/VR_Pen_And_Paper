@@ -21,7 +21,7 @@ public class TerrainModdeling : MonoBehaviour {
 	}
 
 
-    private void raiseTerrain(Vector3 point)
+    private void raiseTerrain(Vector3 point) //https://forum.unity3d.com/threads/edit-terrain-in-real-time.98410/
     {
         int terX = (int)((point.x / myTerrain.terrainData.size.x) * xResolution);
         int terZ = (int)((point.z / myTerrain.terrainData.size.z) * zResolution);
