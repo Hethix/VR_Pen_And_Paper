@@ -3,7 +3,7 @@ using System.Collections;
 
 public class InteractableItem : MonoBehaviour
 {
-    private Rigidbody rigidbody;
+    private Rigidbody _rigidbody;
 
     private WandController attachedWand;
     private Transform interactionPoint;
@@ -11,7 +11,7 @@ public class InteractableItem : MonoBehaviour
     private Coroutine stopRoutine;
     private Coroutine newItemRoutine;
 
-    private float velocityFactor = 20000f;
+    private float velocityFactor = 400f;
     private Vector3 posDelta;
 
     private float rotationFactor = 400f;
@@ -34,9 +34,9 @@ public class InteractableItem : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
-        velocityFactor /= rigidbody.mass;
-        rotationFactor /= rigidbody.mass;
+        _rigidbody = GetComponent<Rigidbody>();
+        velocityFactor /= _rigidbody.mass;
+        rotationFactor /= _rigidbody.mass;
         startScale = transform.localScale;
         menuPosition = GameObject.FindGameObjectWithTag("Menu");
         interactionPoint = new GameObject().transform;
@@ -47,8 +47,9 @@ public class InteractableItem : MonoBehaviour
     {
         if (attachedWand && currentlyInteracting)
         {
+            Debug.Log("Trying to move object with hand");
             posDelta = attachedWand.transform.position - interactionPoint.position;
-            this.rigidbody.velocity = posDelta * velocityFactor * Time.fixedDeltaTime;
+            this._rigidbody.velocity = posDelta * velocityFactor * Time.fixedDeltaTime;
 
             rotationDelta = attachedWand.transform.rotation * Quaternion.Inverse(interactionPoint.rotation);
             rotationDelta.ToAngleAxis(out angle, out axis);
@@ -59,7 +60,7 @@ public class InteractableItem : MonoBehaviour
             }
 
             //Apply rotation force
-            this.rigidbody.angularVelocity = (Time.fixedDeltaTime * angle * axis) * rotationFactor;
+            this._rigidbody.angularVelocity = (Time.fixedDeltaTime * angle * axis) * rotationFactor;
             //Extra adjustment to keep the object oriented in place (standing up)
             this.transform.localRotation = Quaternion.Euler(0, this.transform.rotation.eulerAngles.y, 0);
 
@@ -88,7 +89,7 @@ public class InteractableItem : MonoBehaviour
             currentlyInteracting = true;
 
             StopCoroutine(stopRoutine);
-            this.rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+            this._rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         }
         
     }
@@ -117,10 +118,10 @@ public class InteractableItem : MonoBehaviour
 
     IEnumerator LockPosition(float waitTime)
     {
-        this.rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ |
+        this._rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ |
                                      RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
         yield return new WaitForSeconds(waitTime);
-        this.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+        this._rigidbody.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     IEnumerator InstantiateFix(WandController wand) //This is needed since BeginInteraction() is ran before Start() is
@@ -132,7 +133,7 @@ public class InteractableItem : MonoBehaviour
 
         interactionPoint.SetParent(transform, true);
         currentlyInteracting = true;
-        this.rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        this._rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     public void Destroy()
