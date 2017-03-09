@@ -32,5 +32,9 @@ sysinfo.txt
 
 # Builds
 *.apk
+<<<<<<< HEAD
 *.unitypackage
 *.xml
+=======
+*.unitypackage
+>>>>>>> master
