@@ -2,7 +2,7 @@
 <doc>
   <members>
     <assembly>
-      <name>UnityEditor.TreeEditor</name>
+      <name>UnityEngine.VR</name>
     </assembly>
   </members>
 </doc>
