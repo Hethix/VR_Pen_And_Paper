@@ -24,7 +24,7 @@ public class WandController : MonoBehaviour
     private bool changeMenu = false;
 
     private GameObject hitInteractable;
-    private RaycastHit hit;
+    public RaycastHit hit;
 
     // Use this for initialization
     void Start()
@@ -48,14 +48,13 @@ public class WandController : MonoBehaviour
             if (Physics.Raycast(transform.position, transform.forward, out hit))
             {
                 DrawRay();
-                Debug.Log("Hit an object, " + hit.distance);
                 if (hit.collider.CompareTag("Interactable"))
                 {
-                    Debug.Log("I FOUND AN OBJECT TO INTERACT WITH WOOP WOOP!");
+                    //Debug.Log("I FOUND AN OBJECT TO INTERACT WITH WOOP WOOP!  " + hit.collider.name);
                     if(hit.collider.gameObject != hitInteractable)
                     {
                         hitInteractable = hit.collider.gameObject;
-                        Debug.Log("Found a new object to interact with");
+                        //Debug.Log("Found a new object to interact with");
                     }
                     if (controller.GetPressDown(triggerButton))
                     {
@@ -66,7 +65,7 @@ public class WandController : MonoBehaviour
             } else if(hitInteractable != null)
             {
                 hitInteractable = null;
-                Debug.Log("Didn't hit an object");
+                //Debug.Log("Didn't hit an object");
             }
 
             //Stop holding the object
@@ -157,6 +156,7 @@ public class WandController : MonoBehaviour
                 prefab = (GameObject)Instantiate(currentHitObject.worldPrefab, transform.position, Quaternion.Euler(0, 0, 0)); //Spawn it at the controllers pos and with 0 rotation (facing upwards)
                 interactingItem = prefab.GetComponent<InteractableItem>(); //Is only used for letting an object go again in this case
                 interactingItem.BeginInteraction(this);
+                Debug.Log(interactingItem);
             }
             else if (currentHitObject.isArrow)
             {
